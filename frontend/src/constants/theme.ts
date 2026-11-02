@@ -1,65 +1,35 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://unistyl.es/), etc.
- */
+export const COLORS = {
+  skyBlue: '#A5C6D6',
+  yellowGreen: '#B7C361',
+  oliveGreen: '#848833',
+  mossGreen: '#424D11',
+  charcoal: '#1A1C19',
+  white: '#FFFFFF',
 
-import '@/global.css';
+  ink: '#1A1C19',
+  muted: '#5E6457',
+  paper: '#F4F6EE',
+  line: 'rgba(26,28,25,0.12)',
 
-import { Platform } from 'react-native';
+  board: '#1A1C19',
+  boardPanel: '#24271F',
+  boardRaised: '#2E3227',
+  boardLine: 'rgba(183,195,97,0.18)',
+  boardText: '#EEF0E6',
+  boardMuted: '#A3A893',
 
-export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-  },
+  danger: '#C0392B',
+  gold: '#E2B93B',
+  win: '#7DBB4A',
 } as const;
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+export const RADIUS = { sm: 6, md: 10, lg: 16 } as const;
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
-  },
-});
+export const PROFILE_LABELS: Record<string, { label: string; icon: string }> = {
+  aggressive: { label: 'Aggressive', icon: '🔥' },
+  balanced: { label: 'Balanced', icon: '⚖️' },
+  defensive: { label: 'Defensive', icon: '🛡️' },
+  mixed: { label: 'Mixed', icon: '🎲' },
+};
 
-export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
-} as const;
-
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;
+export const BREAKPOINTS = { tablet: 700, desktop: 1100 } as const;
