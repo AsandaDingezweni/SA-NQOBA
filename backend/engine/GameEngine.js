@@ -183,7 +183,7 @@ class GameEngine {
     this.player(pid).stats.attacks += 1;
     return this.#emit('attack_start', {
       actor: pid,
-      message: `⚔️ ${this.player(pid).name} launches an attack on ${to.name} (${defender.name}) from ${from.name}: ${from.soldiers} vs ${to.soldiers}.`,
+      message: `⚔️ ${this.player(pid).name} launches an attack on ${this.#describeHolding(to)} from ${from.name}: ${from.soldiers} vs ${to.soldiers}.`,
       reason: meta.reason,
       data: { from: fromCode, to: toCode, defender: defender.pid },
     });
@@ -310,13 +310,14 @@ class GameEngine {
 
   #conquer(pid, from, to) {
     const formerOwner = this.player(to.owner);
+    const holding = this.#describeHolding(to);
     const reward = conquestReward(to.value);
     to.owner = pid;
     to.soldiers = reward;
     this.player(pid).stats.conquests += 1;
     this.#emit('conquest', {
       actor: pid,
-      message: `🏆 ${this.player(pid).name} conquered ${to.name} from ${formerOwner.name}! Gains max(2, ${to.value} ÷ 2) = ${reward} soldiers.`,
+      message: `🏆 ${this.player(pid).name} conquered ${holding}! Gains max(2, ${to.value} ÷ 2) = ${reward} soldiers.`,
       patch: [to.code],
       data: { from: from.code, to: to.code, formerOwner: formerOwner.pid, reward },
     });
@@ -339,6 +340,12 @@ class GameEngine {
     } else {
       this.game.phase = PHASE.MAIN;
     }
+  }
+
+  // "Brazil" when Brazil's own NPC still holds it, "Kenya (held by Brazil)" once it has changed hands.
+  #describeHolding(country) {
+    const owner = this.player(country.owner);
+    return owner.name === country.name ? country.name : `${country.name} (held by ${owner.name})`;
   }
 
   #checkGameOver() {

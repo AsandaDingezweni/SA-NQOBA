@@ -1,153 +1,67 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, useWindowDimensions } from 'react-native';
-import { useRouter } from 'expo-router';
-import { COLORS } from '../../theme';
+import { Image, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
+import { Button } from '@/components/ui';
+import { COLORS } from '@/constants/theme';
+import { useAuth } from '@/lib/auth';
 
 export default function MenuScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
-
-  // 1. Determine if we are on a large screen (Desktop/Tablet)
-  const isDesktop = width > 768;
-
-  // 2. Dynamically scale fonts based on screen width (e.g., 8% of screen width)
-  const dynamicTitleSize = Math.min(width * 0.1, 64); // Caps at 64px max
-  const dynamicButtonTextSize = Math.min(width * 0.04, 22); // Caps at 22px max
+  const { user, logout } = useAuth();
+  const titleSize = Math.min(width * 0.1, 64);
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      {/* 3. The main wrapper enforces a maxWidth so it doesn't stretch infinitely on PC */}
-      <View style={[styles.appWrapper, isDesktop && styles.appWrapperDesktop]}>
-        
+    <ScrollView contentContainerStyle={styles.scroll}>
+      <Stack.Screen options={{ title: 'SA-NQOBA · Conquer the World' }} />
+      <View style={[styles.wrapper, width > 768 && styles.wrapperDesktop]}>
         <View style={styles.header}>
-          <Text style={[styles.title, { fontSize: dynamicTitleSize }]}>SA-NQOBA</Text>
-          <Text style={styles.tagline}>Conquer the 10 Economic Zones</Text>
+          <Image source={require('../../assets/images/sa-nqoba-logo.jpeg')} style={styles.logo} accessibilityLabel="SA-NQOBA logo" />
+          <Text style={[styles.title, { fontSize: titleSize }]}>SA-NQOBA</Text>
+          <Text style={styles.tagline}>Nqoba: “conquer”. Ten nations. One commander.</Text>
         </View>
 
         <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Welcome, Commander!</Text>
+          <Text style={styles.infoTitle}>{user ? `Sawubona, ${user.username}!` : 'Welcome, Commander!'}</Text>
           <Text style={styles.infoText}>
-            The South African economy is in flux. Take control of your starting province, build your armies, and use the Ludo Command Die to outmaneuver the NPC factions. 
-            Do you have what it takes to conquer all 10 zones?
+            Choose any nation on Earth, then face nine rival nations drawn at random. Armies are sized by real populations,
+            every battle is called live by an AI commentator, and rival NPCs explain every move they make. Conquer all ten to win.
           </Text>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.primaryButton} onPress={() => router.push('/game' as any)}>
-            <Text style={[styles.primaryButtonText, { fontSize: dynamicButtonTextSize }]}>
-              🎮 START NEW GAME
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.secondaryButton} onPress={() => alert('Rules screen coming soon!')}>
-            <Text style={[styles.secondaryButtonText, { fontSize: dynamicButtonTextSize }]}>
-              📖 HOW TO PLAY
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.secondaryButton} onPress={() => alert('Analytics screen coming soon!')}>
-            <Text style={[styles.secondaryButtonText, { fontSize: dynamicButtonTextSize }]}>
-              📊 STATISTICS
-            </Text>
-          </TouchableOpacity>
+        <View style={styles.buttons}>
+          <Button title="🎮  START NEW CAMPAIGN" onPress={() => router.push(user ? '/new-game' : '/login?next=/new-game')} />
+          <Button variant="secondary" title="🗂️  MY CAMPAIGNS & LIVE GAMES" onPress={() => router.push('/games')} />
+          <Button variant="secondary" title="📊  STATISTICS & LEADERBOARD" onPress={() => router.push('/stats')} />
+          <Button variant="secondary" title="📖  HOW TO PLAY" onPress={() => router.push('/rules')} />
+          {user ? (
+            <Button variant="ghost" title={`Log out (${user.username})`} onPress={logout} />
+          ) : (
+            <View style={styles.authRow}>
+              <Button variant="accent" title="Log in" onPress={() => router.push('/login')} style={{ flex: 1 }} />
+              <Button variant="ghost" title="Sign up" onPress={() => router.push('/register')} style={{ flex: 1 }} />
+            </View>
+          )}
         </View>
 
-        <Text style={styles.footerText}>UCT INF4001 Entrance Exam</Text>
+        <Text style={styles.footer}>UCT INF4001N Entrance Exam 2027 · Built with Expo, Express & MongoDB Atlas</Text>
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    backgroundColor: COLORS.skyBlue,
-    alignItems: 'center', // Centers the whole app on large screens
-  },
-  appWrapper: {
-    width: '100%',
-    padding: 20,
-    paddingTop: 60,
-  },
-  appWrapperDesktop: {
-    maxWidth: 800, // Stops the app from stretching beyond 800px on PC
-    paddingTop: 40,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  title: {
-    fontWeight: 'bold',
-    color: COLORS.charcoal,
-    letterSpacing: 2,
-  },
-  tagline: {
-    fontSize: 16,
-    color: COLORS.mossGreen,
-    fontWeight: '600',
-    marginTop: 5,
-  },
-  infoBox: {
-    backgroundColor: COLORS.white,
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 30,
-    borderLeftWidth: 5,
-    borderLeftColor: COLORS.yellowGreen,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  infoTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: COLORS.charcoal,
-    marginBottom: 10,
-  },
-  infoText: {
-    fontSize: 15,
-    color: '#444',
-    lineHeight: 22,
-  },
-  buttonContainer: {
-    gap: 15,
-    width: '100%',
-  },
-  primaryButton: {
-    backgroundColor: COLORS.mossGreen,
-    paddingVertical: 18,
-    borderRadius: 10,
-    alignItems: 'center',
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  primaryButtonText: {
-    color: COLORS.white,
-    fontWeight: 'bold',
-    letterSpacing: 1,
-  },
-  secondaryButton: {
-    backgroundColor: COLORS.oliveGreen,
-    paddingVertical: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  secondaryButtonText: {
-    color: COLORS.white,
-    fontWeight: 'bold',
-  },
-  footerText: {
-    textAlign: 'center',
-    marginTop: 40,
-    marginBottom: 20,
-    color: COLORS.mossGreen,
-    fontSize: 12,
-    fontWeight: 'bold',
-  }
+  scroll: { flexGrow: 1, backgroundColor: COLORS.skyBlue, alignItems: 'center' },
+  wrapper: { width: '100%', padding: 20, paddingTop: 48 },
+  wrapperDesktop: { maxWidth: 720, paddingTop: 36 },
+  header: { alignItems: 'center', marginBottom: 24, gap: 6 },
+  logo: { width: 110, height: 110, borderRadius: 55, borderWidth: 3, borderColor: COLORS.mossGreen },
+  title: { fontWeight: '900', color: COLORS.charcoal, letterSpacing: 3 },
+  tagline: { fontSize: 15, color: COLORS.mossGreen, fontWeight: '700', textAlign: 'center' },
+  infoBox: { backgroundColor: COLORS.white, padding: 20, borderRadius: 14, marginBottom: 24, borderLeftWidth: 6, borderLeftColor: COLORS.yellowGreen },
+  infoTitle: { fontSize: 20, fontWeight: '900', color: COLORS.charcoal, marginBottom: 8 },
+  infoText: { fontSize: 15, color: '#3D4237', lineHeight: 22 },
+  buttons: { gap: 12 },
+  authRow: { flexDirection: 'row', gap: 12 },
+  footer: { textAlign: 'center', marginTop: 32, marginBottom: 16, color: COLORS.mossGreen, fontSize: 12, fontWeight: '700' },
 });
