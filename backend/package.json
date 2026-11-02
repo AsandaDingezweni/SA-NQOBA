@@ -1,10 +1,13 @@
 {
-  "name": "backend",
+  "name": "sa-nqoba-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "SA-NQOBA API: Express + MongoDB game server",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test tests/",
+    "build:web": "cd ../frontend && npx expo export -p web"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +23,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.11.4",
     "openai": "^7.43.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
