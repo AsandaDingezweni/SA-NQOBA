@@ -1,4 +1,4 @@
-// End-to-end check of a running server: node scripts/smoke-test.js [baseUrl]
+// End-to-end check of a running server: node scripts/smoke.js [baseUrl]
 const assert = require('node:assert/strict');
 
 const BASE = (process.argv[2] ?? 'http://localhost:5000').replace(/\/$/, '') + '/api';

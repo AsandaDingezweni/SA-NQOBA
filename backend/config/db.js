@@ -1,16 +1,27 @@
-const dns = require('node:dns/promises');
+const dns = require('node:dns');
 const mongoose = require('mongoose');
 const Country = require('../models/Country');
 const User = require('../models/User');
 const catalogue = require('../data/countries');
 const { soldierValueFor } = require('../engine/rules');
 
-// Some ISP resolvers fail Atlas SRV lookups; public resolvers make mongodb+srv:// reliable.
-dns.setServers(['1.1.1.1', '8.8.8.8']);
+const PUBLIC_RESOLVERS = ['1.1.1.1', '8.8.8.8'];
+const OPTIONS = { serverSelectionTimeoutMS: 15000 };
 
+// Some home/ISP resolvers cannot answer the SRV lookups behind mongodb+srv:// URIs.
+// Use the host's resolver first and fall back to public DNS only if that lookup fails,
+// so locked-down servers that block outbound DNS still work.
 async function connectDatabase(uri) {
   mongoose.set('strictQuery', true);
-  await mongoose.connect(uri, { serverSelectionTimeoutMS: 15000 });
+  try {
+    await mongoose.connect(uri, OPTIONS);
+  } catch (err) {
+    const srvFailure = /querySrv|ENOTFOUND|ECONNREFUSED|ETIMEOUT/.test(String(err.message));
+    if (!uri.startsWith('mongodb+srv://') || !srvFailure) throw err;
+    console.warn(`Atlas SRV lookup failed with the system resolver (${err.message}); retrying with public DNS.`);
+    dns.setServers(PUBLIC_RESOLVERS);
+    await mongoose.connect(uri, OPTIONS);
+  }
   console.log(`MongoDB connected: ${mongoose.connection.name}`);
   await migrateLegacyUsers();
   await seedCountries();
@@ -26,7 +37,7 @@ async function migrateLegacyUsers() {
   );
 }
 
-// Idempotent: re-running converges the collection to the catalogue.
+// Idempotent: re-running converges the collection to the catalogue, so a brand-new database works.
 async function seedCountries() {
   const ops = catalogue.map((c) => ({
     updateOne: {

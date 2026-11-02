@@ -15,38 +15,40 @@
 | Demo login | `<username>` / `<password>` (create it on the Sign up page of the deployed site) |
 | Database | MongoDB Atlas cluster, database `SANQOBA`. Add the examiners' emails as Atlas project members, or supply a read-only database user. |
 
-## Running it locally
+## Running it on a new computer
 
-Prerequisites: Node.js 20 or later, and a MongoDB Atlas connection string.
+You need two things:
 
-```bash
-cd backend
-cp .env.example .env        # then fill in MONGO_URI, JWT_SECRET and optionally OPENAI_API_KEY
-npm install
-npm test                    # engine unit tests
-npm start                   # API on http://localhost:5000
-```
+1. **Node.js 20.19 or later** (22 LTS recommended) from https://nodejs.org. npm comes with it.
+2. **An internet connection** for the first install. All packages download automatically; the zip deliberately contains no `node_modules` folders.
 
-In a second terminal:
+On Windows, unzip to a short path such as `C:\SA-NQOBA` and not inside OneDrive. React Native packages nest deeply, and a long parent path pushes them past Windows' 260-character path limit. When that happens, `npm install` fails with `ENOENT: mkdir … File exists` or `EPERM`. OneDrive folders also make installs and builds much slower.
+
+Then, from the project folder (the one containing this README):
 
 ```bash
-cd frontend
-npm install
-npx expo start --web        # web app on http://localhost:8081 (press a / i for Android / iOS)
+npm install          # installs the root, backend/ and frontend/ packages (a few minutes the first time)
 ```
 
-The web app calls `http://localhost:5000` in development. Set `EXPO_PUBLIC_API_URL` to point it elsewhere.
-
-With the server running, `node scripts/smoke-test.js` (from `backend/`) plays a real game over HTTP and checks the access-control and rule guarantees.
-
-### Production build (one service)
+Create `backend/.env` by copying `backend/.env.example` and filling in the values. The server refuses to start without `MONGO_URI` and `JWT_SECRET`, and its error message says which one is missing. `OPENAI_API_KEY` is optional: without it the game runs with the built-in commentator and NPC strategy.
 
 ```bash
-cd frontend && npx expo export -p web     # writes frontend/dist
-cd ../backend && npm start                # serves the API and the web app on one port
+npm test             # engine unit tests, no database needed
+npm run build        # builds the web app into frontend/dist
+npm start            # API + web app together on http://localhost:5000
 ```
 
-Express serves `frontend/dist` with a single-page-app fallback, so one Node web service (for example Render or Railway) hosts the whole application. Set `MONGO_URI`, `JWT_SECRET` and `OPENAI_API_KEY` as environment variables on the host.
+Open **http://localhost:5000**, sign up, and start a campaign. To check the whole stack over HTTP, run `npm run smoke` in a second terminal while the server is running.
+
+If the database connection fails, the MongoDB Atlas cluster must allow the computer's IP address: in Atlas, open Network Access and add the current IP address, or `0.0.0.0/0` for "allow from anywhere".
+
+### Developer mode (hot reload)
+
+Use two terminals: `npm run dev:api` (API on :5000) and `npm run dev:web` (Expo on http://localhost:8081, which calls the API on :5000). Set `EXPO_PUBLIC_API_URL` to point the app at another API. In the Expo terminal, press `a` for Android or `i` for iOS.
+
+### Deploying
+
+`npm run build` followed by `npm start` serves the API and the web app from one Node process, so any Node host (Render, Railway, a VM) runs the whole application as a single web service. Set `MONGO_URI`, `JWT_SECRET`, `OPENAI_API_KEY` and optionally `PORT` as environment variables on the host instead of a `.env` file. Use `npm install` as the install command, `npm run build` as the build command, and `npm start` as the start command.
 
 ## How the case-study rules map to the code
 
