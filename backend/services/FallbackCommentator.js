@@ -1,6 +1,6 @@
 const pick = (lines) => lines[Math.floor(Math.random() * lines.length)];
 
-// Rule-based commentary used when no OpenAI key is configured or the API call fails.
+// Rule-based commentary used when no Groq key is configured or the API call fails.
 class FallbackCommentator {
   roll({ attacker, defender, attackerLosses, defenderLosses, attackerSoldiers, defenderSoldiers, outcome }) {
     if (outcome === 'conquest') {

@@ -139,8 +139,8 @@ export default function NewGameScreen() {
         <View style={styles.aiRow}>
           <Switch value={aiOn && aiAvailable} onValueChange={setAiOn} disabled={!aiAvailable} trackColor={{ true: COLORS.oliveGreen }} accessibilityLabel="AI strategist" />
           <Text style={[styles.help, { flex: 1 }]}>
-            🧠 AI strategist: GPT-4o-mini chooses each rival's attack from the engine's legal options and explains it in character.
-            {aiAvailable ? '' : ' (Unavailable: the server has no OpenAI key, so rivals use the built-in strategy.)'}
+            🧠 AI strategist: an LLM on Groq chooses each rival's attack from the engine's legal options and explains it in character.
+            {aiAvailable ? '' : ' (Unavailable: the server has no Groq API key, so rivals use the built-in strategy.)'}
           </Text>
         </View>
       </Card>

@@ -75,7 +75,7 @@ export function BattlePanel({
       {roll?.commentary ? (
         <View style={styles.commentary}>
           <Text style={styles.commentaryText}>🎙️ “{roll.commentary}”</Text>
-          <Text style={styles.source}>{roll.commentarySource === 'ai' ? 'Live AI commentary · GPT-4o-mini' : 'Studio commentator (offline mode)'}</Text>
+          <Text style={styles.source}>{roll.commentarySource === 'ai' ? 'Live AI commentary · Groq' : 'Studio commentator (offline mode)'}</Text>
         </View>
       ) : null}
     </View>

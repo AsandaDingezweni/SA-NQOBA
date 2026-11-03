@@ -32,7 +32,7 @@ function createApiRouter({ gameService, statsService, ai }) {
   const router = express.Router();
   const games = createGameController(gameService);
 
-  router.get('/health', (_req, res) => res.json({ ok: true, ai: { enabled: ai.enabled, model: ai.model } }));
+  router.get('/health', (_req, res) => res.json({ ok: true, ai: { enabled: ai.enabled, provider: ai.provider, model: ai.model } }));
 
   router.post('/auth/register', authLimiter, validate(credentials), authController.register);
   router.post('/auth/login', authLimiter, validate(credentials), authController.login);
