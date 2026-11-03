@@ -49,7 +49,7 @@ const SECTIONS: { title: string; points: string[] }[] = [
     title: 'Rivals, AI and sharing',
     points: [
       'NPCs play to win: they weigh the exact odds of every possible attack and explain each decision in the war room log.',
-      'Personalities: 🔥 Aggressive, ⚖️ Balanced, 🛡️ Defensive. With the 🧠 AI strategist on, GPT-4o-mini picks their moves.',
+      'Personalities: 🔥 Aggressive, ⚖️ Balanced, 🛡️ Defensive. With the 🧠 AI strategist on, an LLM on Groq picks their moves.',
       'An AI commentator calls every dice roll, South African radio style.',
       'Turn on ⏩ Fast-forward to speed up NPC turns; every move is still shown.',
       'Share your game link: anyone can watch live, but only you can play your turns.',

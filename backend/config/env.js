@@ -7,7 +7,7 @@ function required(name) {
   return value;
 }
 
-const openAiKey = process.env.OPENAI_API_KEY ?? '';
+const groqKey = process.env.GROQ_API_KEY ?? '';
 
 module.exports = Object.freeze({
   nodeEnv: process.env.NODE_ENV ?? 'development',
@@ -16,10 +16,13 @@ module.exports = Object.freeze({
   jwtSecret: required('JWT_SECRET'),
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
   corsOrigins: (process.env.CORS_ORIGINS ?? 'http://localhost:8081,http://localhost:19006').split(',').map((s) => s.trim()).filter(Boolean),
-  openAi: {
-    // The placeholder from the template counts as "no key": the game falls back to rule-based commentary.
-    apiKey: openAiKey.startsWith('sk-') ? openAiKey : null,
-    model: process.env.OPENAI_MODEL ?? 'gpt-4o-mini',
-    timeoutMs: Number(process.env.OPENAI_TIMEOUT_MS) || 8000,
+  // Groq serves an OpenAI-compatible API, so the openai SDK talks to it through baseURL.
+  ai: {
+    provider: 'Groq',
+    // A missing or placeholder key counts as "no key": the game falls back to rule-based commentary.
+    apiKey: groqKey.startsWith('gsk_') ? groqKey : null,
+    baseURL: process.env.GROQ_BASE_URL ?? 'https://api.groq.com/openai/v1',
+    model: process.env.GROQ_MODEL ?? 'qwen/qwen3.8-27b',
+    timeoutMs: Number(process.env.AI_TIMEOUT_MS) || 8000,
   },
 });

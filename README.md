@@ -5,7 +5,7 @@
 - **Web and mobile:** React Native with Expo SDK 58 and Expo Router. One codebase runs in the browser, on Android and on iOS.
 - **API:** Node.js and Express 5, organised as models, services, controllers and routes, with a separate pure game engine.
 - **Database:** MongoDB Atlas, through Mongoose.
-- **AI:** OpenAI GPT-4o-mini provides live battle commentary and an optional NPC strategist. The game falls back to rule-based play when no key is configured.
+- **AI:** an LLM served by Groq (default `qwen/qwen3.8-27b`, set by `GROQ_MODEL`) provides live battle commentary and an optional NPC strategist. Groq's OpenAI-compatible API is called through the `openai` SDK. The game falls back to rule-based play when no key is configured.
 
 ## Submission details
 
@@ -30,7 +30,7 @@ Then, from the project folder (the one containing this README):
 npm install          # installs the root, backend/ and frontend/ packages (a few minutes the first time)
 ```
 
-Create `backend/.env` by copying `backend/.env.example` and filling in the values. The server refuses to start without `MONGO_URI` and `JWT_SECRET`, and its error message says which one is missing. `OPENAI_API_KEY` is optional: without it the game runs with the built-in commentator and NPC strategy.
+Create `backend/.env` by copying `backend/.env.example` and filling in the values. The server refuses to start without `MONGO_URI` and `JWT_SECRET`, and its error message says which one is missing. `GROQ_API_KEY` is optional (free key at https://console.groq.com/keys): without it the game runs with the built-in commentator and NPC strategy. Check `http://localhost:5000/api/health`: `"ai":{"enabled":true,"provider":"Groq",…}` means the key was picked up.
 
 ```bash
 npm test             # engine unit tests, no database needed
@@ -48,7 +48,7 @@ Use two terminals: `npm run dev:api` (API on :5000) and `npm run dev:web` (Expo 
 
 ### Deploying
 
-`npm run build` followed by `npm start` serves the API and the web app from one Node process, so any Node host (Render, Railway, a VM) runs the whole application as a single web service. Set `MONGO_URI`, `JWT_SECRET`, `OPENAI_API_KEY` and optionally `PORT` as environment variables on the host instead of a `.env` file. Use `npm install` as the install command, `npm run build` as the build command, and `npm start` as the start command.
+`npm run build` followed by `npm start` serves the API and the web app from one Node process, so any Node host (Render, Railway, a VM) runs the whole application as a single web service. Set `MONGO_URI`, `JWT_SECRET`, `GROQ_API_KEY` and optionally `GROQ_MODEL` and `PORT` as environment variables on the host instead of a `.env` file. Use `npm install` as the install command, `npm run build` as the build command, and `npm start` as the start command.
 
 ## How the case-study rules map to the code
 
@@ -73,7 +73,7 @@ Every state change is appended to the game's `events` log with a board patch. Th
 
 NPCs play to win. `NpcStrategy` scores every legal attack using the exact conquest probability (dynamic programming in `OddsCalculator`), the prize size, whether it weakens the leader, and whether it eliminates a rival. NPCs mass spare troops before striking, stop an attack when the odds drop below their limit, and split soldiers after a conquest. Each decision carries a written reason that appears in the war room log, including during fast-forward. Three personalities (Aggressive, Balanced, Defensive) tune the risk thresholds, and a patience rule lowers the bar after quiet turns so games never stall.
 
-With an OpenAI key, the 🧠 AI strategist lets GPT-4o-mini choose among the engine's top legal options and justify the choice in character. It can never make an illegal move.
+With a Groq key, the 🧠 AI strategist lets the LLM choose among the engine's top legal options and justify the choice in character. It can never make an illegal move.
 
 ## Security and access control
 
