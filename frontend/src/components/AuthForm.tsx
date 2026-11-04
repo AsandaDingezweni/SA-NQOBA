@@ -72,8 +72,8 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
 }
 
 const styles = StyleSheet.create({
-  heading: { fontSize: 22, fontWeight: '900', color: COLORS.ink },
-  sub: { color: COLORS.muted, fontSize: 14, lineHeight: 20 },
+  heading: { fontSize: 22, fontWeight: '900', color: COLORS.text },
+  sub: { color: COLORS.textMuted, fontSize: 14, lineHeight: 20 },
   switch: { flexDirection: 'row', gap: 6, justifyContent: 'center', alignItems: 'center' },
-  link: { color: COLORS.mossGreen, fontWeight: '800', textDecorationLine: 'underline' },
+  link: { color: COLORS.lime, fontWeight: '800', textDecorationLine: 'underline' },
 });

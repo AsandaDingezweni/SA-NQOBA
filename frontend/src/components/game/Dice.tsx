@@ -25,8 +25,8 @@ export function Die({ value, tone, result, size = 44, rollKey }: { value: number
 
   const rotate = spin.interpolate({ inputRange: [0, 1], outputRange: [tone === 'attacker' ? '-540deg' : '540deg', '0deg'] });
   const scale = spin.interpolate({ inputRange: [0, 0.6, 1], outputRange: [0.3, 1.15, 1] });
-  const bg = tone === 'attacker' ? '#F4F1E4' : '#E9EEF1';
-  const ring = result === 'win' ? COLORS.win : result === 'lose' ? COLORS.danger : result === 'tie' ? COLORS.gold : 'transparent';
+  const bg = tone === 'attacker' ? COLORS.gold : COLORS.sky;
+  const ring = result === 'win' ? COLORS.win : result === 'lose' ? COLORS.danger : result === 'tie' ? COLORS.text : 'transparent';
   const pip = size / 6.5;
 
   return (
@@ -46,7 +46,7 @@ export function Die({ value, tone, result, size = 44, rollKey }: { value: number
             width: pip,
             height: pip,
             borderRadius: pip / 2,
-            backgroundColor: tone === 'attacker' ? COLORS.mossGreen : COLORS.charcoal,
+            backgroundColor: COLORS.onColor,
             top: size * (0.2 + r * 0.3) - pip / 2,
             left: size * (0.2 + c * 0.3) - pip / 2,
           }}
@@ -57,5 +57,5 @@ export function Die({ value, tone, result, size = 44, rollKey }: { value: number
 }
 
 const styles = StyleSheet.create({
-  die: { borderWidth: 3, shadowColor: '#000', shadowOpacity: 0.35, shadowRadius: 4, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
+  die: { borderWidth: 3, shadowColor: COLORS.shadow, shadowOpacity: 0.35, shadowRadius: 4, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
 });

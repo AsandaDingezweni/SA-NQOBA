@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/sa-nqoba-logo.jpeg",
     "scheme": "sanqoba",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "ios": {
       "supportsTablet": true
     },
@@ -21,15 +21,15 @@
       "favicon": "./assets/images/sa-nqoba-logo.jpeg",
       "name": "SA-NQOBA",
       "shortName": "SA-NQOBA",
-      "themeColor": "#1A1C19",
-      "backgroundColor": "#A5C6D6"
+      "themeColor": "#141612",
+      "backgroundColor": "#1C1E1B"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#1A1C19",
+          "backgroundColor": "#1C1E1B",
           "image": "./assets/images/splash-logo.jpeg",
           "imageWidth": 200
         }

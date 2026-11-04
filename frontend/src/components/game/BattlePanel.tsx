@@ -8,8 +8,8 @@ import type { CountryState, GameEvent, Player } from '@/lib/types';
 const OUTCOME: Record<string, { text: string; color: string }> = {
   conquest: { text: '🏆 CONQUERED', color: COLORS.win },
   attack_failed: { text: '💥 ATTACK REPELLED', color: COLORS.danger },
-  attack_stop: { text: '🏳️ ATTACK CALLED OFF', color: COLORS.gold },
-  attack_start: { text: '⚔️ ATTACK LAUNCHED', color: COLORS.yellowGreen },
+  attack_stop: { text: '🏳️ ATTACK CALLED OFF', color: COLORS.sky },
+  attack_start: { text: '⚔️ ATTACK LAUNCHED', color: COLORS.lime },
 };
 
 // Live view of the most recent battle: who is fighting, the paired dice, the outcome and the commentary.
@@ -87,29 +87,29 @@ function Side({ country, player, soldiers, align }: { country?: CountryState; pl
     <View style={[styles.side, align === 'right' && { alignItems: 'flex-end' }]}>
       <Flag iso2={country?.iso2} size={26} />
       <Text style={styles.sideName} numberOfLines={1}>{country?.name ?? '—'}</Text>
-      <Text style={[styles.sideOwner, { color: player?.color === COLORS.mossGreen ? COLORS.yellowGreen : COLORS.boardMuted }]} numberOfLines={1}>{player?.name}</Text>
+      <Text style={[styles.sideOwner, { color: player?.kind === 'human' ? COLORS.lime : COLORS.textMuted }]} numberOfLines={1}>{player?.name}</Text>
       <Text style={styles.sideSoldiers}>{soldiers ?? '—'}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  panel: { backgroundColor: COLORS.boardPanel, borderRadius: RADIUS.lg, padding: 14, borderWidth: 1, borderColor: COLORS.boardLine, gap: 12 },
+  panel: { backgroundColor: COLORS.panel, borderRadius: RADIUS.lg, padding: 14, borderWidth: 1, borderColor: COLORS.line, gap: 12 },
   titleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  title: { color: COLORS.yellowGreen, fontWeight: '900', letterSpacing: 1.5, fontSize: 12 },
-  rollNo: { color: COLORS.boardMuted, fontSize: 12, fontWeight: '700' },
-  idle: { color: COLORS.boardMuted, fontSize: 14 },
+  title: { color: COLORS.textMuted, fontWeight: '900', letterSpacing: 1.5, fontSize: 12 },
+  rollNo: { color: COLORS.textMuted, fontSize: 12, fontWeight: '700' },
+  idle: { color: COLORS.textMuted, fontSize: 14 },
   versus: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   vs: { color: COLORS.gold, fontWeight: '900', fontSize: 18 },
   side: { flex: 1, gap: 3 },
-  sideName: { color: COLORS.boardText, fontWeight: '800', fontSize: 15 },
+  sideName: { color: COLORS.text, fontWeight: '800', fontSize: 15 },
   sideOwner: { fontSize: 12, fontWeight: '700' },
-  sideSoldiers: { color: COLORS.white, fontWeight: '900', fontSize: 28 },
+  sideSoldiers: { color: COLORS.text, fontWeight: '900', fontSize: 28 },
   diceGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 14, justifyContent: 'center' },
   pair: { gap: 8, alignItems: 'center' },
-  losses: { color: COLORS.boardText, textAlign: 'center', fontWeight: '700' },
+  losses: { color: COLORS.text, textAlign: 'center', fontWeight: '700' },
   outcome: { textAlign: 'center', fontWeight: '900', fontSize: 16, letterSpacing: 1 },
-  commentary: { backgroundColor: COLORS.boardRaised, borderRadius: RADIUS.md, padding: 12, borderLeftWidth: 4, borderLeftColor: COLORS.yellowGreen, gap: 4 },
-  commentaryText: { color: COLORS.boardText, fontSize: 14, fontStyle: 'italic', lineHeight: 20 },
-  source: { color: COLORS.boardMuted, fontSize: 11 },
+  commentary: { backgroundColor: COLORS.raised, borderRadius: RADIUS.md, padding: 12, borderLeftWidth: 4, borderLeftColor: COLORS.sky, gap: 4 },
+  commentaryText: { color: COLORS.text, fontSize: 14, fontStyle: 'italic', lineHeight: 20 },
+  source: { color: COLORS.textMuted, fontSize: 11 },
 });

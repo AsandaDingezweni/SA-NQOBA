@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { COLORS, RADIUS } from '@/constants/theme';
+import { COLORS, playerTone, RADIUS } from '@/constants/theme';
 import { Chip } from '@/components/ui';
 import type { EventType, GameEvent, Player } from '@/lib/types';
 
@@ -23,7 +23,7 @@ export function EventFeed({ events, players, maxHeight }: { events: GameEvent[];
       <Text style={styles.title}>WAR ROOM LOG</Text>
       <View style={styles.filters}>
         {(Object.keys(FILTERS) as (keyof typeof FILTERS)[]).map((key) => (
-          <Chip key={key} dark label={FILTERS[key].label} active={filter === key} onPress={() => setFilter(key)} />
+          <Chip key={key} label={FILTERS[key].label} active={filter === key} onPress={() => setFilter(key)} />
         ))}
       </View>
       <View style={{ maxHeight, overflow: 'hidden' }}>
@@ -31,7 +31,7 @@ export function EventFeed({ events, players, maxHeight }: { events: GameEvent[];
         {rows.map((e) => {
           const actor = e.actor ? players[e.actor] : undefined;
           return (
-            <View key={e.seq} style={[styles.row, { borderLeftColor: actor?.color ?? COLORS.boardLine }]}>
+            <View key={e.seq} style={[styles.row, { borderLeftColor: actor ? playerTone(actor.color).fill : COLORS.line }]}>
               <Text style={styles.meta}>R{e.round} · #{e.seq}</Text>
               <Text style={[styles.message, e.type === 'conquest' && styles.conquest, (e.type === 'victory' || e.type === 'defeat') && styles.final]}>{e.message}</Text>
               {e.reason ? <Text style={styles.reason}>💭 {e.reason}</Text> : null}
@@ -45,15 +45,15 @@ export function EventFeed({ events, players, maxHeight }: { events: GameEvent[];
 }
 
 const styles = StyleSheet.create({
-  panel: { backgroundColor: COLORS.boardPanel, borderRadius: RADIUS.lg, padding: 14, borderWidth: 1, borderColor: COLORS.boardLine, gap: 10 },
-  title: { color: COLORS.yellowGreen, fontWeight: '900', letterSpacing: 1.5, fontSize: 12 },
+  panel: { backgroundColor: COLORS.panel, borderRadius: RADIUS.lg, padding: 14, borderWidth: 1, borderColor: COLORS.line, gap: 10 },
+  title: { color: COLORS.textMuted, fontWeight: '900', letterSpacing: 1.5, fontSize: 12 },
   filters: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
-  empty: { color: COLORS.boardMuted },
+  empty: { color: COLORS.textMuted },
   row: { borderLeftWidth: 3, paddingLeft: 10, paddingVertical: 6, marginBottom: 4, gap: 3 },
-  meta: { color: COLORS.boardMuted, fontSize: 10, fontWeight: '700' },
-  message: { color: COLORS.boardText, fontSize: 13, lineHeight: 18 },
+  meta: { color: COLORS.textMuted, fontSize: 10, fontWeight: '700' },
+  message: { color: COLORS.text, fontSize: 13, lineHeight: 18 },
   conquest: { color: COLORS.win, fontWeight: '800' },
   final: { color: COLORS.gold, fontWeight: '900' },
-  reason: { color: '#C9CDB8', fontSize: 12, fontStyle: 'italic', lineHeight: 17 },
-  commentary: { color: COLORS.yellowGreen, fontSize: 12, lineHeight: 17 },
+  reason: { color: COLORS.textMuted, fontSize: 12, fontStyle: 'italic', lineHeight: 17 },
+  commentary: { color: COLORS.sky, fontSize: 12, lineHeight: 17 },
 });

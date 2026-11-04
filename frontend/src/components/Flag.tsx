@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image } from 'expo-image';
 import { StyleSheet, View } from 'react-native';
+import { COLORS } from '@/constants/theme';
 
 export function Flag({ iso2, size = 28 }: { iso2?: string; size?: number }) {
   return (
@@ -13,5 +14,5 @@ export function Flag({ iso2, size = 28 }: { iso2?: string; size?: number }) {
 }
 
 const styles = StyleSheet.create({
-  frame: { borderRadius: 4, overflow: 'hidden', backgroundColor: '#3A3F33', borderWidth: 1, borderColor: 'rgba(0,0,0,0.25)' },
+  frame: { borderRadius: 4, overflow: 'hidden', backgroundColor: COLORS.hover, borderWidth: 1, borderColor: COLORS.line },
 });
