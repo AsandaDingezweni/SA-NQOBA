@@ -41,6 +41,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
+    "check:colors": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-colors.mjs",
     "export:web": "expo export -p web"
   },
   "private": true
