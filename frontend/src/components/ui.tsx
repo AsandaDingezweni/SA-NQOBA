@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps, type ViewStyle, type StyleProp } from 'react-native';
+import { ActivityIndicator, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps, type ViewStyle, type StyleProp } from 'react-native';
 import { COLORS, mix, RADIUS } from '@/constants/theme';
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'accent';
@@ -121,6 +121,40 @@ export function Field({ label, error, secureTextEntry, ...props }: TextInputProp
   );
 }
 
+export function ConfirmDialog({
+  visible,
+  title,
+  message,
+  confirmLabel,
+  cancelLabel,
+  onConfirm,
+  onCancel,
+}: {
+  visible: boolean;
+  title: string;
+  message: string;
+  confirmLabel: string;
+  cancelLabel: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent onRequestClose={onCancel}>
+      <View style={styles.dialogRoot}>
+        <Pressable aria-hidden focusable={false} onPress={onCancel} style={[StyleSheet.absoluteFill, styles.dialogScrim]} />
+        <View role="alertdialog" aria-modal aria-label={title} style={styles.dialog}>
+          <Text role="heading" style={styles.dialogTitle}>{title}</Text>
+          <Text style={styles.dialogMessage}>{message}</Text>
+          <View style={styles.dialogActions}>
+            <Button variant="secondary" title={cancelLabel} onPress={onCancel} style={styles.dialogButton} />
+            <Button variant="danger" title={confirmLabel} onPress={onConfirm} style={styles.dialogButton} />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
 export function Stepper({ value, min, max, onChange }: { value: number; min: number; max: number; onChange: (n: number) => void }) {
   const btn = (label: string, next: number, enabled: boolean) => (
     <Pressable
@@ -191,6 +225,13 @@ const styles = StyleSheet.create({
   eyePupil: { width: 5, height: 5, borderRadius: 2.5 },
   eyeSlash: { position: 'absolute', width: 24, height: 1.75, borderRadius: 1, transform: [{ rotate: '-45deg' }] },
   fieldError: { color: COLORS.dangerText, fontSize: 12, fontWeight: '600' },
+  dialogRoot: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 },
+  dialogScrim: { backgroundColor: COLORS.scrim },
+  dialog: { width: '100%', maxWidth: 420, backgroundColor: COLORS.panel, borderRadius: RADIUS.lg, borderWidth: 1, borderColor: COLORS.lineStrong, padding: 20, gap: 8, shadowColor: COLORS.shadow, shadowOpacity: 0.5, shadowRadius: 24, shadowOffset: { width: 0, height: 12 }, elevation: 12 },
+  dialogTitle: { fontSize: 20, fontWeight: '900', color: COLORS.text },
+  dialogMessage: { fontSize: 15, lineHeight: 22, color: COLORS.textMuted },
+  dialogActions: { flexDirection: 'row', gap: 10, marginTop: 12 },
+  dialogButton: { flex: 1, paddingHorizontal: 8 },
   stepper: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   stepBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: COLORS.lime, alignItems: 'center', justifyContent: 'center' },
   stepBtnText: { fontSize: 20, fontWeight: '900', color: COLORS.onColor },
