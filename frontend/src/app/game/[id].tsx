@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Platform, Pressable, Share, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
-import { Banner, Button, Chip, Stepper } from '@/components/ui';
+import { Banner, Button, Chip, ConfirmDialog, Stepper } from '@/components/ui';
 import { CountryCard, type CardRole } from '@/components/game/CountryCard';
 import { BattlePanel } from '@/components/game/BattlePanel';
 import { EventFeed } from '@/components/game/EventFeed';
@@ -29,6 +29,7 @@ export default function GameScreen() {
   const [alloc, setAlloc] = useState<Record<string, number>>({});
   const [occupyN, setOccupyN] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [withdrawing, setWithdrawing] = useState(false);
 
   const phase = game?.phase;
   useEffect(() => {
@@ -262,7 +263,7 @@ export default function GameScreen() {
         <View style={styles.row}>
           <Chip label={session.fastForward ? 'Fast-forward on' : 'Fast-forward'} active={session.fastForward} onPress={() => session.setFastForward(!session.fastForward)} />
           <Chip label="Replay" onPress={() => router.push(`/replay/${game.id}`)} />
-          {session.viewerIsOwner && game.status === 'active' ? <Chip label="Withdraw" onPress={() => confirmForfeit(() => session.command('forfeit'))} /> : null}
+          {session.viewerIsOwner && game.status === 'active' ? <Chip label="Withdraw" onPress={() => setWithdrawing(true)} /> : null}
         </View>
       </View>
 
@@ -289,6 +290,18 @@ export default function GameScreen() {
         {human?.name}'s campaign · started from {view.countryMap[game.humanCountry]?.name} · NPC style: {game.settings.npcProfile}
         {game.settings.aiStrategist ? ' · 🧠 AI strategist on' : ''}
       </Text>
+      <ConfirmDialog
+        visible={withdrawing}
+        title="Withdraw from this campaign?"
+        message="Your campaign ends here, and it will count as a loss."
+        confirmLabel="Withdraw"
+        cancelLabel="Keep fighting"
+        onCancel={() => setWithdrawing(false)}
+        onConfirm={() => {
+          setWithdrawing(false);
+          session.command('forfeit');
+        }}
+      />
     </Screen>
   );
 }
@@ -300,14 +313,6 @@ const PHASE_HINT: Record<string, (g: any, mode: Mode) => string> = {
   occupy: () => 'Victory in battle! Choose how many soldiers move in.',
   finished: () => '',
 };
-
-function confirmForfeit(onYes: () => void) {
-  if (Platform.OS === 'web') {
-    if (window.confirm('Withdraw from this campaign? It will count as a loss.')) onYes();
-  } else {
-    onYes();
-  }
-}
 
 const styles = StyleSheet.create({
   loading: { color: COLORS.text, textAlign: 'center', marginTop: 12 },
