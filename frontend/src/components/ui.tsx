@@ -1,5 +1,5 @@
-import React from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps, type ViewStyle, type StyleProp } from 'react-native';
+import React, { useState } from 'react';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, TextInput, View, type TextInputProps, type ViewStyle, type StyleProp } from 'react-native';
 import { COLORS, mix, RADIUS } from '@/constants/theme';
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost' | 'accent';
@@ -74,16 +74,48 @@ export function Card({ children, style }: { children: React.ReactNode; style?: S
   return <View style={[styles.card, style]}>{children}</View>;
 }
 
-export function Field({ label, error, ...props }: TextInputProps & { label: string; error?: string }) {
+// Edge adds its own reveal button to password inputs, which would sit beside the toggle in Field.
+if (Platform.OS === 'web' && typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = 'input::-ms-reveal, input::-ms-clear { display: none; }';
+  document.head.appendChild(style);
+}
+
+function EyeIcon({ crossed }: { crossed: boolean }) {
+  const color = crossed ? COLORS.textMuted : COLORS.text;
+  return (
+    <View style={styles.eye}>
+      <View style={[styles.eyeLens, { borderColor: color }]} />
+      <View style={[styles.eyePupil, { backgroundColor: color }]} />
+      {crossed ? <View style={[styles.eyeSlash, { backgroundColor: color }]} /> : null}
+    </View>
+  );
+}
+
+export function Field({ label, error, secureTextEntry, ...props }: TextInputProps & { label: string; error?: string }) {
+  const [revealed, setRevealed] = useState(false);
   return (
     <View style={{ gap: 6 }}>
       <Text style={styles.label}>{label}</Text>
-      <TextInput
-        placeholderTextColor={COLORS.textFaint}
-        {...props}
-        accessibilityLabel={label}
-        style={[styles.input, error ? { borderColor: COLORS.danger } : null, props.style]}
-      />
+      <View>
+        <TextInput
+          placeholderTextColor={COLORS.textFaint}
+          {...props}
+          secureTextEntry={secureTextEntry && !revealed}
+          accessibilityLabel={label}
+          style={[styles.input, secureTextEntry ? styles.inputWithToggle : null, error ? { borderColor: COLORS.danger } : null, props.style]}
+        />
+        {secureTextEntry ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`${revealed ? 'Hide' : 'Show'} ${label.toLowerCase()}`}
+            onPress={() => setRevealed((r) => !r)}
+            style={styles.eyeToggle}
+          >
+            <EyeIcon crossed={!revealed} />
+          </Pressable>
+        ) : null}
+      </View>
       {error ? <Text style={styles.fieldError}>{error}</Text> : null}
     </View>
   );
@@ -152,6 +184,12 @@ const styles = StyleSheet.create({
   card: { backgroundColor: COLORS.panel, borderRadius: RADIUS.lg, padding: 16, borderWidth: 1, borderColor: COLORS.line },
   label: { fontSize: 13, fontWeight: '700', color: COLORS.text },
   input: { borderWidth: 1.5, borderColor: COLORS.lineStrong, borderRadius: RADIUS.md, paddingVertical: 11, paddingHorizontal: 12, fontSize: 15, backgroundColor: COLORS.deep, color: COLORS.text },
+  inputWithToggle: { paddingRight: 48 },
+  eyeToggle: { position: 'absolute', top: 0, bottom: 0, right: 0, width: 48, alignItems: 'center', justifyContent: 'center' },
+  eye: { width: 24, height: 24, alignItems: 'center', justifyContent: 'center' },
+  eyeLens: { position: 'absolute', width: 14, height: 14, borderWidth: 1.75, borderTopLeftRadius: 12, borderBottomRightRadius: 12, transform: [{ rotate: '45deg' }] },
+  eyePupil: { width: 5, height: 5, borderRadius: 2.5 },
+  eyeSlash: { position: 'absolute', width: 24, height: 1.75, borderRadius: 1, transform: [{ rotate: '-45deg' }] },
   fieldError: { color: COLORS.dangerText, fontSize: 12, fontWeight: '600' },
   stepper: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   stepBtn: { width: 38, height: 38, borderRadius: 19, backgroundColor: COLORS.lime, alignItems: 'center', justifyContent: 'center' },
