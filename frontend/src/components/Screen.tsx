@@ -10,7 +10,6 @@ export function Screen({
   title,
   children,
   back = true,
-  dark,
   scroll = true,
   maxWidth = 960,
   right,
@@ -18,7 +17,6 @@ export function Screen({
   title: string;
   children: React.ReactNode;
   back?: boolean;
-  dark?: boolean;
   scroll?: boolean;
   maxWidth?: number;
   right?: React.ReactNode;
@@ -30,7 +28,7 @@ export function Screen({
   const body = <View style={[styles.content, { maxWidth }]}>{children}</View>;
 
   return (
-    <View style={[styles.root, { backgroundColor: dark ? COLORS.board : COLORS.skyBlue }]}>
+    <View style={styles.root}>
       <Stack.Screen options={{ title: `${title} · SA-NQOBA` }} />
       <View style={[styles.bar, { paddingTop: insets.top + 10 }]}>
         <View style={styles.barSide}>
@@ -58,7 +56,7 @@ export function Screen({
             onPress={() => router.push(user ? '/stats' : '/login')}
             style={styles.userChip}
           >
-            <Text style={styles.userText} numberOfLines={1}>{user ? `👤 ${user.username}` : 'Log in'}</Text>
+            <Text style={styles.userText} numberOfLines={1}>{user ? user.username : 'Log in'}</Text>
           </Pressable>
         </View>
       </View>
@@ -74,25 +72,25 @@ export function Screen({
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
+  root: { flex: 1, backgroundColor: COLORS.surface },
   bar: {
-    backgroundColor: COLORS.charcoal,
+    backgroundColor: COLORS.deep,
     paddingHorizontal: 16,
     paddingBottom: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: COLORS.mossGreen,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.line,
   },
   barSide: { flexDirection: 'row', alignItems: 'center', gap: 10, flexShrink: 1 },
-  backBtn: { width: 34, height: 34, borderRadius: 17, backgroundColor: COLORS.mossGreen, alignItems: 'center', justifyContent: 'center' },
-  backText: { color: COLORS.white, fontSize: 18, fontWeight: '900' },
-  brand: { color: COLORS.yellowGreen, fontWeight: '900', letterSpacing: 2, fontSize: 15 },
-  title: { color: COLORS.white, fontWeight: '700', fontSize: 15, flexShrink: 1 },
-  userChip: { backgroundColor: COLORS.oliveGreen, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 999, maxWidth: 160 },
-  userText: { color: COLORS.white, fontWeight: '700', fontSize: 13 },
+  backBtn: { width: 34, height: 34, borderRadius: 17, backgroundColor: COLORS.raised, alignItems: 'center', justifyContent: 'center' },
+  backText: { color: COLORS.text, fontSize: 18, fontWeight: '900' },
+  brand: { color: COLORS.lime, fontWeight: '900', letterSpacing: 2, fontSize: 15 },
+  title: { color: COLORS.text, fontWeight: '700', fontSize: 15, flexShrink: 1 },
+  userChip: { backgroundColor: COLORS.raised, borderWidth: 1, borderColor: COLORS.lineStrong, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 999, maxWidth: 160 },
+  userText: { color: COLORS.text, fontWeight: '700', fontSize: 13 },
   scroll: { padding: 16, alignItems: 'center' },
   content: { width: '100%', gap: 16 },
 });

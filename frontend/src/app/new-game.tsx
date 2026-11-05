@@ -4,7 +4,7 @@ import { Redirect, useRouter } from 'expo-router';
 import { Screen } from '@/components/Screen';
 import { Banner, Button, Card, Chip, Field, SectionTitle } from '@/components/ui';
 import { Flag } from '@/components/Flag';
-import { COLORS, PROFILE_LABELS, RADIUS } from '@/constants/theme';
+import { COLORS, mix, PROFILE_LABELS, RADIUS } from '@/constants/theme';
 import { api } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import type { Country } from '@/lib/types';
@@ -94,7 +94,7 @@ export default function NewGameScreen() {
         </View>
 
         {countries === null ? (
-          <ActivityIndicator color={COLORS.mossGreen} />
+          <ActivityIndicator color={COLORS.lime} />
         ) : countries.length === 0 ? (
           <Text style={styles.empty}>No countries match those filters.</Text>
         ) : (
@@ -114,8 +114,8 @@ export default function NewGameScreen() {
                     >
                       <Flag iso2={c.iso2} size={18} />
                       <View style={{ flex: 1 }}>
-                        <Text style={[styles.countryName, active && { color: COLORS.white }]} numberOfLines={1}>{c.name}</Text>
-                        <Text style={[styles.countryMeta, active && { color: COLORS.yellowGreen }]}>
+                        <Text style={[styles.countryName, active && { color: COLORS.text }]} numberOfLines={1}>{c.name}</Text>
+                        <Text style={[styles.countryMeta, active && { color: COLORS.lime }]}>
                           {c.soldiers} ⚔ · {formatPop(c.population)}
                         </Text>
                       </View>
@@ -132,12 +132,12 @@ export default function NewGameScreen() {
         <SectionTitle>2 · Rival personalities</SectionTitle>
         <View style={styles.chips}>
           {PROFILES.map((p) => (
-            <Chip key={p} label={`${PROFILE_LABELS[p].icon} ${PROFILE_LABELS[p].label}`} active={profile === p} onPress={() => setProfile(p)} />
+            <Chip key={p} label={PROFILE_LABELS[p].label} active={profile === p} onPress={() => setProfile(p)} />
           ))}
         </View>
         <Text style={styles.help}>{PROFILE_HELP[profile]} Every NPC explains each decision in the war room log.</Text>
         <View style={styles.aiRow}>
-          <Switch value={aiOn && aiAvailable} onValueChange={setAiOn} disabled={!aiAvailable} trackColor={{ true: COLORS.oliveGreen }} accessibilityLabel="AI strategist" />
+          <Switch value={aiOn && aiAvailable} onValueChange={setAiOn} disabled={!aiAvailable} trackColor={{ true: COLORS.lime }} accessibilityLabel="AI strategist" />
           <Text style={[styles.help, { flex: 1 }]}>
             🧠 AI strategist: an LLM on Groq chooses each rival's attack from the engine's legal options and explains it in character.
             {aiAvailable ? '' : ' (Unavailable: the server has no Groq API key, so rivals use the built-in strategy.)'}
@@ -155,7 +155,7 @@ export default function NewGameScreen() {
                 Starts with {selected.soldiers} soldier{selected.soldiers === 1 ? '' : 's'} ({formatPop(selected.population)} people). Nine rivals will be drawn at random.
               </Text>
             </View>
-            <Button title="⚔️ Start campaign" onPress={start} loading={starting} />
+            <Button title="Start campaign" onPress={start} loading={starting} />
           </>
         ) : (
           <Text style={styles.help}>Pick a nation to lead.</Text>
@@ -174,16 +174,16 @@ function formatPop(n: number) {
 
 const styles = StyleSheet.create({
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, alignItems: 'center' },
-  sortLabel: { fontWeight: '700', color: COLORS.muted },
-  empty: { color: COLORS.muted, textAlign: 'center', padding: 20 },
-  count: { color: COLORS.muted, fontSize: 12 },
+  sortLabel: { fontWeight: '700', color: COLORS.textMuted },
+  empty: { color: COLORS.textMuted, textAlign: 'center', padding: 20 },
+  count: { color: COLORS.textMuted, fontSize: 12 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', margin: -4 },
-  country: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: RADIUS.md, backgroundColor: COLORS.paper, borderWidth: 1.5, borderColor: COLORS.line },
-  countryActive: { backgroundColor: COLORS.mossGreen, borderColor: COLORS.mossGreen },
-  countryName: { fontWeight: '800', color: COLORS.ink, fontSize: 13 },
-  countryMeta: { color: COLORS.muted, fontSize: 11, fontWeight: '600' },
-  help: { color: COLORS.muted, fontSize: 13, lineHeight: 19 },
+  country: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: RADIUS.md, backgroundColor: COLORS.raised, borderWidth: 1.5, borderColor: COLORS.line },
+  countryActive: { backgroundColor: mix(COLORS.raised, COLORS.lime, 0.16), borderColor: COLORS.lime },
+  countryName: { fontWeight: '800', color: COLORS.text, fontSize: 13 },
+  countryMeta: { color: COLORS.textMuted, fontSize: 11, fontWeight: '600' },
+  help: { color: COLORS.textMuted, fontSize: 13, lineHeight: 19 },
   aiRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  summary: { flexDirection: 'row', alignItems: 'center', gap: 14, flexWrap: 'wrap', borderColor: COLORS.mossGreen, borderWidth: 2 },
-  summaryTitle: { fontSize: 20, fontWeight: '900', color: COLORS.ink },
+  summary: { flexDirection: 'row', alignItems: 'center', gap: 14, flexWrap: 'wrap', borderColor: COLORS.lime, borderWidth: 1.5 },
+  summaryTitle: { fontSize: 20, fontWeight: '900', color: COLORS.text },
 });

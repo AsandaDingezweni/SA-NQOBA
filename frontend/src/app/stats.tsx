@@ -52,7 +52,7 @@ export default function StatsScreen() {
             <Button small variant="ghost" title="Log out" onPress={logout} />
           </View>
           {!mine ? (
-            <ActivityIndicator color={COLORS.mossGreen} />
+            <ActivityIndicator color={COLORS.lime} />
           ) : (
             <>
               <View style={styles.tiles}>
@@ -96,7 +96,7 @@ export default function StatsScreen() {
       <Card style={{ gap: 14 }}>
         <SectionTitle>Platform-wide</SectionTitle>
         {!platform ? (
-          <ActivityIndicator color={COLORS.mossGreen} />
+          <ActivityIndicator color={COLORS.lime} />
         ) : (
           <>
             <View style={styles.tiles}>
@@ -124,7 +124,7 @@ export default function StatsScreen() {
             {platform.leaderboard.length === 0 ? <Text style={styles.empty}>No champions yet.</Text> : null}
             {platform.leaderboard.map((r: any, i: number) => (
               <View key={r.name + i} style={styles.leader}>
-                <Text style={styles.rank}>{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}</Text>
+                <Text style={[styles.rank, i < 3 && styles.rankTop]}>#{i + 1}</Text>
                 <Text style={styles.leaderName}>{r.name}</Text>
                 <Text style={styles.leaderStat}>{r.wins} wins / {r.games} games · {pct(r.winRate)}</Text>
               </View>
@@ -141,15 +141,16 @@ const styles = StyleSheet.create({
   tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   columns: { flexDirection: 'row', flexWrap: 'wrap', gap: 20 },
   column: { flexGrow: 1, flexBasis: 240, gap: 8 },
-  subhead: { fontWeight: '800', color: COLORS.ink, fontSize: 14 },
-  empty: { color: COLORS.muted },
+  subhead: { fontWeight: '800', color: COLORS.text, fontSize: 14 },
+  empty: { color: COLORS.textMuted },
   barRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  barLabel: { width: 110, fontSize: 12, fontWeight: '700', color: COLORS.ink },
-  barTrack: { flex: 1, height: 10, backgroundColor: COLORS.paper, borderRadius: 5, overflow: 'hidden' },
-  barFill: { height: 10, backgroundColor: COLORS.oliveGreen, borderRadius: 5 },
-  barValue: { minWidth: 30, textAlign: 'right', fontSize: 12, fontWeight: '800', color: COLORS.mossGreen },
+  barLabel: { width: 110, fontSize: 12, fontWeight: '700', color: COLORS.text },
+  barTrack: { flex: 1, height: 10, backgroundColor: COLORS.raised, borderRadius: 5, overflow: 'hidden' },
+  barFill: { height: 10, backgroundColor: COLORS.sky, borderRadius: 5 },
+  barValue: { minWidth: 30, textAlign: 'right', fontSize: 12, fontWeight: '800', color: COLORS.text },
   leader: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: COLORS.line },
-  rank: { width: 34, fontSize: 16, fontWeight: '900', color: COLORS.mossGreen },
-  leaderName: { flex: 1, fontWeight: '800', color: COLORS.ink },
-  leaderStat: { color: COLORS.muted, fontSize: 12 },
+  rank: { width: 34, fontSize: 16, fontWeight: '900', color: COLORS.textMuted },
+  rankTop: { color: COLORS.gold },
+  leaderName: { flex: 1, fontWeight: '800', color: COLORS.text },
+  leaderStat: { color: COLORS.textMuted, fontSize: 12 },
 });

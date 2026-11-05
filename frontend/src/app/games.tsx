@@ -16,7 +16,7 @@ const STATUSES = [
   { key: 'lost', label: 'Lost' },
 ];
 const STATUS_STYLE: Record<string, { label: string; color: string }> = {
-  active: { label: 'LIVE', color: COLORS.oliveGreen },
+  active: { label: 'LIVE', color: COLORS.sky },
   won: { label: 'WON', color: COLORS.win },
   lost: { label: 'LOST', color: COLORS.danger },
 };
@@ -54,8 +54,8 @@ export default function GamesScreen() {
   return (
     <Screen title="Campaigns">
       <View style={styles.tabs}>
-        <Chip label="🗂️ My campaigns" active={tab === 'mine'} onPress={() => (user ? setTab('mine') : router.push('/login?next=/games'))} />
-        <Chip label="📡 Everyone's games" active={tab === 'public'} onPress={() => setTab('public')} />
+        <Chip label="My campaigns" active={tab === 'mine'} onPress={() => (user ? setTab('mine') : router.push('/login?next=/games'))} />
+        <Chip label="Everyone's games" active={tab === 'public'} onPress={() => setTab('public')} />
         <Button small title="+ New campaign" onPress={() => router.push(user ? '/new-game' : '/login?next=/new-game')} style={{ marginLeft: 'auto' }} />
       </View>
       {error ? <Banner message={error} onClose={() => setError(null)} /> : null}
@@ -66,7 +66,7 @@ export default function GamesScreen() {
         <Text style={styles.count}>{items ? `${total} game${total === 1 ? '' : 's'}` : ' '}</Text>
       </Card>
 
-      {items === null ? <ActivityIndicator color={COLORS.mossGreen} /> : null}
+      {items === null ? <ActivityIndicator color={COLORS.lime} /> : null}
       {items?.length === 0 ? (
         <Card>
           <Text style={styles.empty}>{tab === 'mine' ? 'No campaigns yet. Start one and conquer the world!' : 'No games match.'}</Text>
@@ -77,7 +77,7 @@ export default function GamesScreen() {
         {items?.map((g) => {
           const st = STATUS_STYLE[g.status];
           return (
-            <Pressable key={g.id} accessibilityRole="link" onPress={() => router.push(`/game/${g.id}`)} style={({ hovered }: any) => [styles.item, hovered && { borderColor: COLORS.mossGreen }]}>
+            <Pressable key={g.id} accessibilityRole="link" onPress={() => router.push(`/game/${g.id}`)} style={({ hovered }: any) => [styles.item, hovered && { borderColor: COLORS.lineStrong }]}>
               <Flag iso2={g.startCountry.iso2} size={30} />
               <View style={{ flex: 1, gap: 2 }}>
                 <Text style={styles.itemTitle} numberOfLines={1}>
@@ -106,12 +106,12 @@ export default function GamesScreen() {
 
 const styles = StyleSheet.create({
   tabs: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, alignItems: 'center' },
-  count: { color: COLORS.muted, fontSize: 12 },
-  empty: { color: COLORS.muted, textAlign: 'center' },
+  count: { color: COLORS.textMuted, fontSize: 12 },
+  empty: { color: COLORS.textMuted, textAlign: 'center' },
   list: { gap: 10 },
-  item: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: COLORS.white, padding: 14, borderRadius: RADIUS.lg, borderWidth: 1.5, borderColor: COLORS.line },
-  itemTitle: { fontWeight: '900', color: COLORS.ink, fontSize: 15 },
-  itemMeta: { color: COLORS.muted, fontSize: 12 },
-  badge: { color: COLORS.white, fontWeight: '900', fontSize: 11, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 999, overflow: 'hidden', letterSpacing: 1 },
-  replay: { color: COLORS.mossGreen, fontWeight: '800', fontSize: 12 },
+  item: { flexDirection: 'row', alignItems: 'center', gap: 14, backgroundColor: COLORS.panel, padding: 14, borderRadius: RADIUS.lg, borderWidth: 1.5, borderColor: COLORS.line },
+  itemTitle: { fontWeight: '900', color: COLORS.text, fontSize: 15 },
+  itemMeta: { color: COLORS.textMuted, fontSize: 12 },
+  badge: { color: COLORS.onColor, fontWeight: '900', fontSize: 11, paddingHorizontal: 8, paddingVertical: 3, borderRadius: 999, overflow: 'hidden', letterSpacing: 1 },
+  replay: { color: COLORS.lime, fontWeight: '800', fontSize: 12 },
 });

@@ -23,15 +23,15 @@ export default function SplashScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.charcoal },
+  container: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.surface },
   backgroundImage: { position: 'absolute', top: 0, left: 0, bottom: 0, right: 0, width: '100%', height: '100%' },
   loadingText: {
     position: 'absolute',
     bottom: '10%',
-    color: COLORS.white,
+    color: COLORS.text,
     fontStyle: 'italic',
     fontWeight: 'bold',
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: COLORS.scrim,
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { COLORS, PROFILE_LABELS, RADIUS } from '@/constants/theme';
+import { COLORS, playerTone, PROFILE_LABELS, RADIUS } from '@/constants/theme';
 import type { CountryState, Player } from '@/lib/types';
 
 // Turn order with each player's holdings, so everyone can size up the next target at a glance.
@@ -16,7 +16,7 @@ export function PlayerBoard({ order, players, countries, currentPid }: { order: 
         return (
           <View key={pid} style={[styles.row, active && styles.active, p.eliminated && { opacity: 0.4 }]}>
             <Text style={styles.turn}>{active ? '▶' : ''}</Text>
-            <View style={[styles.dot, { backgroundColor: p.color }]} />
+            <View style={[styles.dot, { backgroundColor: playerTone(p.color).fill }]} />
             <Text style={[styles.name, p.eliminated && styles.out]} numberOfLines={1}>
               {p.kind === 'human' ? `★ ${p.name}` : p.name}
             </Text>
@@ -30,14 +30,14 @@ export function PlayerBoard({ order, players, countries, currentPid }: { order: 
 }
 
 const styles = StyleSheet.create({
-  panel: { backgroundColor: COLORS.boardPanel, borderRadius: RADIUS.lg, padding: 14, borderWidth: 1, borderColor: COLORS.boardLine, gap: 4 },
-  title: { color: COLORS.yellowGreen, fontWeight: '900', letterSpacing: 1.5, fontSize: 12, marginBottom: 6 },
+  panel: { backgroundColor: COLORS.panel, borderRadius: RADIUS.lg, padding: 14, borderWidth: 1, borderColor: COLORS.line, gap: 4 },
+  title: { color: COLORS.textMuted, fontWeight: '900', letterSpacing: 1.5, fontSize: 12, marginBottom: 6 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 5, paddingHorizontal: 6, borderRadius: RADIUS.sm },
-  active: { backgroundColor: COLORS.boardRaised },
-  turn: { width: 12, color: COLORS.yellowGreen, fontWeight: '900' },
+  active: { backgroundColor: COLORS.raised },
+  turn: { width: 12, color: COLORS.lime, fontWeight: '900' },
   dot: { width: 10, height: 10, borderRadius: 5 },
-  name: { flex: 1, color: COLORS.boardText, fontWeight: '700', fontSize: 13 },
+  name: { flex: 1, color: COLORS.text, fontWeight: '700', fontSize: 13 },
   out: { textDecorationLine: 'line-through' },
   profile: { fontSize: 12 },
-  stat: { color: COLORS.boardMuted, fontSize: 12, fontWeight: '700' },
+  stat: { color: COLORS.textMuted, fontSize: 12, fontWeight: '700' },
 });

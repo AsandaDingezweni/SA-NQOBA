@@ -51,8 +51,8 @@ export default function GameScreen() {
   }
   if (!game || !view) {
     return (
-      <Screen title="Campaign" dark>
-        <ActivityIndicator size="large" color={COLORS.yellowGreen} />
+      <Screen title="Campaign">
+        <ActivityIndicator size="large" color={COLORS.lime} />
         <Text style={styles.loading}>Loading the battlefield…</Text>
       </Screen>
     );
@@ -143,17 +143,17 @@ export default function GameScreen() {
           <Text style={styles.controlTitle}>Deploy reinforcements: {remaining} left</Text>
           <Text style={styles.controlHint}>Tap your countries to add one soldier each.</Text>
           <View style={styles.row}>
-            <Button small variant="ghostDark" title="Reset" onPress={() => setAlloc({})} />
+            <Button small variant="ghost" title="Reset" onPress={() => setAlloc({})} />
             <Button
               small
-              variant="ghostDark"
+              variant="ghost"
               title="All on strongest"
               onPress={() => {
                 const best = view.countries.filter((c) => c.owner === 'human').sort((a, b) => b.soldiers - a.soldiers)[0];
                 setAlloc({ [best.code]: game.pendingReinforcements });
               }}
             />
-            <Button small variant="accent" title="Deploy" disabled={remaining !== 0} loading={busy} onPress={() => session.command('reinforce', { allocations: alloc })} />
+            <Button small title="Deploy" disabled={remaining !== 0} loading={busy} onPress={() => session.command('reinforce', { allocations: alloc })} />
           </View>
         </>
       ) : null}
@@ -161,8 +161,8 @@ export default function GameScreen() {
       {phase === 'main' && canAct ? (
         <>
           <View style={styles.row}>
-            <Chip dark label="⚔️ Attack" active={mode === 'attack'} onPress={() => { setMode('attack'); setFrom(null); setTo(null); }} />
-            <Chip dark label="🔁 Transfer" active={mode === 'transfer'} onPress={() => { setMode('transfer'); setFrom(null); setTo(null); }} />
+            <Chip label="Attack" active={mode === 'attack'} onPress={() => { setMode('attack'); setFrom(null); setTo(null); }} />
+            <Chip label="Transfer" active={mode === 'transfer'} onPress={() => { setMode('transfer'); setFrom(null); setTo(null); }} />
           </View>
           {mode === 'attack' ? (
             game.attackUsed ? (
@@ -177,7 +177,7 @@ export default function GameScreen() {
                 ) : null}
                 <Button
                   variant="danger"
-                  title={toC ? `⚔️ Attack ${toC.name}` : 'Select a target'}
+                  title={toC ? `Attack ${toC.name}` : 'Select a target'}
                   disabled={!fromC || !toC || fromC.soldiers < 2}
                   loading={busy}
                   onPress={() => session.command('attack', { from, to })}
@@ -192,8 +192,8 @@ export default function GameScreen() {
               </Text>
               {fromC && toC ? (
                 <View style={styles.row}>
-                  <Stepper dark value={Math.min(amount, fromC.soldiers - 1)} min={1} max={Math.max(1, fromC.soldiers - 1)} onChange={setAmount} />
-                  <Button small variant="accent" title="Move" disabled={fromC.soldiers < 2} loading={busy} onPress={() => session.command('transfer', { from, to, soldiers: Math.min(amount, fromC.soldiers - 1) })} />
+                  <Stepper value={Math.min(amount, fromC.soldiers - 1)} min={1} max={Math.max(1, fromC.soldiers - 1)} onChange={setAmount} />
+                  <Button small title="Move" disabled={fromC.soldiers < 2} loading={busy} onPress={() => session.command('transfer', { from, to, soldiers: Math.min(amount, fromC.soldiers - 1) })} />
                 </View>
               ) : null}
             </>
@@ -209,8 +209,8 @@ export default function GameScreen() {
           </Text>
           <Text style={styles.controlHint}>Keep rolling until you conquer it, drop to 1 soldier, or stop (stopping ends your turn).</Text>
           <View style={styles.row}>
-            <Button variant="accent" title="🎲 Roll dice" loading={busy} onPress={() => session.command('roll')} style={{ flexGrow: 1 }} />
-            <Button variant="ghostDark" title="🏳️ Stop attack" disabled={busy} onPress={() => session.command('stop')} />
+            <Button variant="accent" title="Roll dice" loading={busy} onPress={() => session.command('roll')} style={{ flexGrow: 1 }} />
+            <Button variant="ghost" title="Stop attack" disabled={busy} onPress={() => session.command('stop')} />
           </View>
         </>
       ) : null}
@@ -220,8 +220,8 @@ export default function GameScreen() {
           <Text style={styles.controlTitle}>Conquered {view.countryMap[game.pendingOccupy.to].name}!</Text>
           <Text style={styles.controlHint}>How many extra soldiers move in from {view.countryMap[game.pendingOccupy.from].name}?</Text>
           <View style={styles.row}>
-            <Stepper dark value={occupyN} min={0} max={game.pendingOccupy.max} onChange={setOccupyN} />
-            <Button small variant="accent" title="Move in" loading={busy} onPress={() => session.command('occupy', { soldiers: occupyN })} />
+            <Stepper value={occupyN} min={0} max={game.pendingOccupy.max} onChange={setOccupyN} />
+            <Button small title="Move in" loading={busy} onPress={() => session.command('occupy', { soldiers: occupyN })} />
           </View>
         </>
       ) : null}
@@ -238,11 +238,10 @@ export default function GameScreen() {
   return (
     <Screen
       title={`Round ${game.round}`}
-      dark
       maxWidth={1400}
       right={
         <Pressable onPress={share} accessibilityRole="button" style={styles.share}>
-          <Text style={styles.shareText}>{copied ? '✓ Link copied' : '🔗 Share'}</Text>
+          <Text style={styles.shareText}>{copied ? '✓ Link copied' : 'Share'}</Text>
         </Pressable>
       }
     >
@@ -253,7 +252,7 @@ export default function GameScreen() {
           <View style={styles.row}>
             <Button variant="accent" title="▶ Replay this game" onPress={() => router.push(`/replay/${game.id}`)} />
             <Button variant="secondary" title="New campaign" onPress={() => router.push('/new-game')} />
-            <Button variant="ghostDark" title="My statistics" onPress={() => router.push('/stats')} />
+            <Button variant="ghost" title="My statistics" onPress={() => router.push('/stats')} />
           </View>
         </View>
       ) : null}
@@ -261,9 +260,9 @@ export default function GameScreen() {
       <View style={styles.topRow}>
         {turnBanner ? <Text style={styles.turnBanner}>{turnBanner}</Text> : null}
         <View style={styles.row}>
-          <Chip dark label={session.fastForward ? '⏩ Fast-forward ON' : '⏩ Fast-forward'} active={session.fastForward} onPress={() => session.setFastForward(!session.fastForward)} />
-          <Chip dark label="📜 Replay" onPress={() => router.push(`/replay/${game.id}`)} />
-          {session.viewerIsOwner && game.status === 'active' ? <Chip dark label="Withdraw" onPress={() => confirmForfeit(() => session.command('forfeit'))} /> : null}
+          <Chip label={session.fastForward ? 'Fast-forward on' : 'Fast-forward'} active={session.fastForward} onPress={() => session.setFastForward(!session.fastForward)} />
+          <Chip label="Replay" onPress={() => router.push(`/replay/${game.id}`)} />
+          {session.viewerIsOwner && game.status === 'active' ? <Chip label="Withdraw" onPress={() => confirmForfeit(() => session.command('forfeit'))} /> : null}
         </View>
       </View>
 
@@ -311,19 +310,19 @@ function confirmForfeit(onYes: () => void) {
 }
 
 const styles = StyleSheet.create({
-  loading: { color: COLORS.boardText, textAlign: 'center', marginTop: 12 },
+  loading: { color: COLORS.text, textAlign: 'center', marginTop: 12 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', margin: -5 },
   columns: { flexDirection: 'row', gap: 18, alignItems: 'flex-start' },
   topRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: 10 },
-  turnBanner: { color: COLORS.boardText, fontSize: 16, fontWeight: '800', flexShrink: 1 },
+  turnBanner: { color: COLORS.text, fontSize: 16, fontWeight: '800', flexShrink: 1 },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, alignItems: 'center' },
-  controls: { backgroundColor: COLORS.boardPanel, borderRadius: RADIUS.lg, padding: 14, gap: 10, borderWidth: 1.5, borderColor: COLORS.yellowGreen },
-  controlTitle: { color: COLORS.white, fontWeight: '900', fontSize: 16 },
-  controlHint: { color: COLORS.boardMuted, fontSize: 13, lineHeight: 18 },
-  share: { backgroundColor: COLORS.mossGreen, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 999 },
-  shareText: { color: COLORS.white, fontWeight: '800', fontSize: 12 },
-  final: { backgroundColor: COLORS.boardPanel, borderWidth: 2, borderRadius: RADIUS.lg, padding: 18, gap: 10 },
-  finalTitle: { color: COLORS.white, fontSize: 24, fontWeight: '900' },
-  finalText: { color: COLORS.boardText, fontSize: 14 },
-  footnote: { color: COLORS.boardMuted, fontSize: 12, textAlign: 'center' },
+  controls: { backgroundColor: COLORS.panel, borderRadius: RADIUS.lg, padding: 14, gap: 10, borderWidth: 1.5, borderColor: COLORS.lime },
+  controlTitle: { color: COLORS.text, fontWeight: '900', fontSize: 16 },
+  controlHint: { color: COLORS.textMuted, fontSize: 13, lineHeight: 18 },
+  share: { backgroundColor: COLORS.raised, borderWidth: 1, borderColor: COLORS.lineStrong, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999 },
+  shareText: { color: COLORS.text, fontWeight: '800', fontSize: 12 },
+  final: { backgroundColor: COLORS.panel, borderWidth: 2, borderRadius: RADIUS.lg, padding: 18, gap: 10 },
+  finalTitle: { color: COLORS.text, fontSize: 24, fontWeight: '900' },
+  finalText: { color: COLORS.text, fontSize: 14 },
+  footnote: { color: COLORS.textMuted, fontSize: 12, textAlign: 'center' },
 });

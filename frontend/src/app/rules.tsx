@@ -51,7 +51,7 @@ const SECTIONS: { title: string; points: string[] }[] = [
       'NPCs play to win: they weigh the exact odds of every possible attack and explain each decision in the war room log.',
       'Personalities: 🔥 Aggressive, ⚖️ Balanced, 🛡️ Defensive. With the 🧠 AI strategist on, an LLM on Groq picks their moves.',
       'An AI commentator calls every dice roll, South African radio style.',
-      'Turn on ⏩ Fast-forward to speed up NPC turns; every move is still shown.',
+      'Turn on Fast-forward to speed up NPC turns; every move is still shown.',
       'Share your game link: anyone can watch live, but only you can play your turns.',
       'Replay any finished or ongoing game step by step from the campaigns list.',
     ],
@@ -79,14 +79,14 @@ export default function RulesScreen() {
           </View>
         ))}
       </Card>
-      <Button title="🎮 Start a campaign" onPress={() => router.push('/new-game')} />
+      <Button title="Start a campaign" onPress={() => router.push('/new-game')} />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  point: { color: COLORS.ink, fontSize: 15, lineHeight: 22 },
+  point: { color: COLORS.text, fontSize: 15, lineHeight: 22 },
   tableRow: { flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: COLORS.line, paddingVertical: 6 },
-  cell: { color: COLORS.ink, fontSize: 14 },
-  num: { fontWeight: '900', color: COLORS.mossGreen },
+  cell: { color: COLORS.text, fontSize: 14 },
+  num: { fontWeight: '900', color: COLORS.text },
 });

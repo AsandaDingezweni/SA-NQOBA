@@ -5,7 +5,7 @@ import { Screen } from '@/components/Screen';
 import { Banner, Button, Chip } from '@/components/ui';
 import { CountryCard } from '@/components/game/CountryCard';
 import { BattlePanel } from '@/components/game/BattlePanel';
-import { COLORS, RADIUS } from '@/constants/theme';
+import { COLORS, playerTone, RADIUS } from '@/constants/theme';
 import { api } from '@/lib/api';
 import type { EventType, GameEvent, GameView, Player } from '@/lib/types';
 
@@ -52,8 +52,8 @@ export default function ReplayScreen() {
   if (error) return <Screen title="Replay"><Banner message={error} /></Screen>;
   if (!game || !frame) {
     return (
-      <Screen title="Replay" dark>
-        <ActivityIndicator color={COLORS.yellowGreen} size="large" />
+      <Screen title="Replay">
+        <ActivityIndicator color={COLORS.lime} size="large" />
       </Screen>
     );
   }
@@ -69,26 +69,26 @@ export default function ReplayScreen() {
   const columns = width < 520 ? 2 : width < 900 ? 3 : 5;
 
   return (
-    <Screen title="Replay" dark maxWidth={1300}>
+    <Screen title="Replay" maxWidth={1300}>
       <View style={styles.controls}>
         <Text style={styles.position}>
           Event {step + 1} / {events.length} · Round {current?.round}
         </Text>
         <View style={styles.row}>
-          <Button small variant="ghostDark" title="⏮" onPress={() => setStep(0)} accessibilityHint="Go to start" />
-          <Button small variant="ghostDark" title="◀ Battle" onPress={() => jump(-1)} />
-          <Button small variant="ghostDark" title="◀" onPress={() => setStep((s) => Math.max(0, s - 1))} />
-          <Button small variant="accent" title={playing ? '⏸ Pause' : '▶ Play'} onPress={() => setPlaying((p) => !p)} />
-          <Button small variant="ghostDark" title="▶" onPress={() => setStep((s) => Math.min(last, s + 1))} />
-          <Button small variant="ghostDark" title="Battle ▶" onPress={() => jump(1)} />
-          <Button small variant="ghostDark" title="⏭" onPress={() => setStep(last)} />
-          {SPEEDS.map((s, i) => <Chip key={s.label} dark label={s.label} active={speed === i} onPress={() => setSpeed(i)} />)}
+          <Button small variant="ghost" title="⏮" onPress={() => setStep(0)} accessibilityHint="Go to start" />
+          <Button small variant="ghost" title="◀ Battle" onPress={() => jump(-1)} />
+          <Button small variant="ghost" title="◀" onPress={() => setStep((s) => Math.max(0, s - 1))} />
+          <Button small title={playing ? '⏸ Pause' : '▶ Play'} onPress={() => setPlaying((p) => !p)} />
+          <Button small variant="ghost" title="▶" onPress={() => setStep((s) => Math.min(last, s + 1))} />
+          <Button small variant="ghost" title="Battle ▶" onPress={() => jump(1)} />
+          <Button small variant="ghost" title="⏭" onPress={() => setStep(last)} />
+          {SPEEDS.map((s, i) => <Chip key={s.label} label={s.label} active={speed === i} onPress={() => setSpeed(i)} />)}
         </View>
         <View style={styles.track}>
           <View style={[styles.trackFill, { width: `${events.length ? ((step + 1) / events.length) * 100 : 0}%` }]} />
         </View>
         {current ? (
-          <View style={[styles.now, { borderLeftColor: players[current.actor ?? '']?.color ?? COLORS.boardLine }]}>
+          <View style={[styles.now, { borderLeftColor: current.actor ? playerTone(players[current.actor]?.color).fill : COLORS.line }]}>
             <Text style={styles.nowText}>{current.message}</Text>
             {current.reason ? <Text style={styles.reason}>💭 {current.reason}</Text> : null}
           </View>
@@ -107,20 +107,20 @@ export default function ReplayScreen() {
           <BattlePanel event={frame.spotlight} lastRoll={frame.lastRoll} countries={frame.countryMap} players={players} />
         </View>
       </View>
-      <Button variant="ghostDark" title="Open the live game" onPress={() => router.push(`/game/${game.id}`)} />
+      <Button variant="ghost" title="Open the live game" onPress={() => router.push(`/game/${game.id}`)} />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  controls: { backgroundColor: COLORS.boardPanel, borderRadius: RADIUS.lg, padding: 14, gap: 10, borderWidth: 1, borderColor: COLORS.boardLine },
-  position: { color: COLORS.yellowGreen, fontWeight: '900', letterSpacing: 1 },
+  controls: { backgroundColor: COLORS.panel, borderRadius: RADIUS.lg, padding: 14, gap: 10, borderWidth: 1, borderColor: COLORS.line },
+  position: { color: COLORS.text, fontWeight: '900', letterSpacing: 1 },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, alignItems: 'center' },
-  track: { height: 6, backgroundColor: COLORS.boardRaised, borderRadius: 3, overflow: 'hidden' },
-  trackFill: { height: 6, backgroundColor: COLORS.yellowGreen },
+  track: { height: 6, backgroundColor: COLORS.raised, borderRadius: 3, overflow: 'hidden' },
+  trackFill: { height: 6, backgroundColor: COLORS.lime },
   now: { borderLeftWidth: 4, paddingLeft: 10, gap: 4 },
-  nowText: { color: COLORS.boardText, fontSize: 15, fontWeight: '700', lineHeight: 21 },
-  reason: { color: '#C9CDB8', fontStyle: 'italic', fontSize: 13 },
+  nowText: { color: COLORS.text, fontSize: 15, fontWeight: '700', lineHeight: 21 },
+  reason: { color: COLORS.textMuted, fontStyle: 'italic', fontSize: 13 },
   layout: { gap: 14 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', margin: -5 },
 });
